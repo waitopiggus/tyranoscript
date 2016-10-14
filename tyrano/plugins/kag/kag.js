@@ -591,9 +591,20 @@ tyrano.plugin.kag ={
             that.ftag.buildTag(array_tag);
             //最初にレイヤをコピーしておく、、、その必要はない！コメント化20122119
             //that.kag.ftag.startTag("backlay",{});
-        
+            
+            //マルチ対応
+            setTimeout(function(){
+                var multi_num = JSON.parse($.getStorage("multi_num"))["multi_num"];
+                if(multi_num != null && multi_num != -1){
+                    //alert("loadgame");
+                    that.kag.menu.loadGame(parseInt(multi_num));
+                }
+            },1000);
+            
+            return;
+            
+            
         });
-        
         
         //ティラノライダーからの通知の場合、発生させる
         that.rider.complete(this);

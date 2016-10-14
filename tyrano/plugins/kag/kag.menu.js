@@ -187,6 +187,8 @@ tyrano.plugin.kag.menu = {
         var data = {};
         var that = this;
 
+                
+               
         if (this.snap == null) {
             //ここはサムネイルイメージ作成のため、callback指定する
             this.snapSave(this.kag.stat.current_message_str, function() {
@@ -260,7 +262,10 @@ tyrano.plugin.kag.menu = {
     snapSave : function(title, call_back,flag_thumb) {
 
         var that = this;
-
+        
+        //マルチURL対応
+        that.kag.stat.gameurl = window.location.href;
+        
         //画面のキャプチャも取るよ
         var _current_order_index = that.kag.ftag.current_order_index - 1;
         var _stat = $.extend(true, {}, $.cloneObject(that.kag.stat));
@@ -392,16 +397,25 @@ tyrano.plugin.kag.menu = {
 
     //ゲームを途中から開始します
     loadGame : function(num) {
-
+        
         var array_save = this.getSaveData();
         var array = array_save.data;
         //セーブデータ配列
-
+        
         //保存されていないデータはロード不可
         if (array[num].save_date == "") {
             return;
         }
-
+        
+        //マルチURL対応。URLが異なる場合は飛ばす
+        if(array[num].stat.gameurl != window.location.href){
+            $.setStorage("multi_num",{"multi_num":num});
+            location.href= array[num].stat.gameurl;
+            return;
+        }else{
+            $.setStorage("multi_num",{"multi_num":-1});
+        }
+        
         this.loadGameData($.extend(true, {}, array[num]));
 
     },
