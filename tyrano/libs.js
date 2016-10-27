@@ -419,6 +419,17 @@
             return false;
         }
     },
+    
+    $.insertRule = function(css_str){
+        
+        var sheet = (function() {
+            var style = document.createElement("style");
+            document.getElementsByTagName("head")[0].appendChild(style);
+            return style.sheet;
+        })();
+        sheet.insertRule(css_str,0);
+        
+    },
 
     $.swfName = function(str) {
         if (navigator.appName.indexOf("Microsoft") != -1) {
@@ -507,6 +518,7 @@
             $.setStorageCompress(key,val);
             
         }else if(type=="file"){
+            
             $.setStorageFile(key,val);
             
         }else{
@@ -627,7 +639,19 @@
         val = JSON.stringify(val);
         var fs = require('fs');
         
-        var out_path = $.getProcessPath();
+        var out_path = "";
+        
+        //mac os Sierra 対応
+        if(process.execPath.indexOf("var/folders")!=-1){
+            out_path = process.env.HOME+"/_TyranoGameData";
+            if(!fs.existsSync(out_path)){
+                fs.mkdirSync(out_path);
+            }
+        }else{
+            out_path = $.getProcessPath();
+        }
+        
+        
         fs.writeFileSync(out_path + "/" + key + ".sav", escape(val));
 
     };
@@ -637,9 +661,19 @@
         try {
 
             var gv = "null";
-
             var fs = require('fs');
-            var out_path = $.getProcessPath();
+            var out_path = "";
+        
+            //Mac os Sierra 対応
+            if(process.execPath.indexOf("var/folders")!=-1){
+                out_path = process.env.HOME+"/_TyranoGameData";
+                if(!fs.existsSync(out_path)){
+                    fs.mkdirSync(out_path);
+                }
+            }else{
+                out_path = $.getProcessPath();
+            }
+            
             if (fs.existsSync(out_path+"/" + key + ".sav")) {
                 var str = fs.readFileSync(out_path+"/" + key + ".sav");
                 gv = unescape(str);

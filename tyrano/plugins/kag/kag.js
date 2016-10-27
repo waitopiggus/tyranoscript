@@ -473,8 +473,11 @@ tyrano.plugin.kag ={
             
         }else{
             //指定がない or yes なら こっち
-            $(".tyrano_base").css("transform-origin","50 50");
-            
+            //$(".tyrano_base").css("transform-origin","50 50");
+            $(".tyrano_base").css("transform-origin","0 0");
+            $(".tyrano_base").css({
+                margin: 0
+            });
         }
         
         //tyranoの大本部分の調整
@@ -525,6 +528,9 @@ tyrano.plugin.kag ={
         if(this.config.WordBreak == "false"){
             j_message_inner.css("word-break","break-all");
         }
+        
+        //１行目の上に余裕を持たせる。rubyカクつき対策
+        $.insertRule(".message_inner p{ padding-top:"+this.kag.config.defaultLineSpacing+"px;}");
         
         this.layer.appendObj("message0","fore",j_message_inner);
        
