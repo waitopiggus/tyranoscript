@@ -662,40 +662,13 @@
     
     //PC版のみ。実行フォルダを取得
     $.getProcessPath = function(){
-        var path = process.execPath;
-        var tmp_index = path.indexOf(".app");
-        var os = "mac";
-        if(tmp_index == -1){
-            tmp_index = path.indexOf(".exe");
-            os="win";
-        }
-        var tmp_path =  path.substr(0,tmp_index);
-        var path_index =0;
-        if(os=="mac"){
-            path_index = tmp_path.lastIndexOf("/");
-        }else{
-            path_index = tmp_path.lastIndexOf("\\");
-        }
-        
-        var out_path = path.substr(0,path_index);
-        return out_path;
-        
+        return require('path').dirname(process.execPath);
     };
     
     $.getOS = function(){
-        
+
         if($.isNWJS()){
-        
-            var path = process.execPath;
-            var tmp_index = path.indexOf(".app");
-            var os = "mac";
-            if(tmp_index == -1){
-                tmp_index = path.indexOf(".exe");
-                os="win";
-            }
-            
-            return os;
-            
+            return process.platform=='win32'?'win':'mac';
         }else{
             return "";
         }
